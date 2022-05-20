@@ -9,13 +9,12 @@ class HtmlNavHelper {
   const HtmlNavHelper();
 
   void navigate(String path) {
-    log('${html.window.document.baseUri ?? ''}$path');
     final Uri launchUri = Uri(
       scheme: html.window.location.protocol.replaceAll(':', ''),
-      host: html.window.location.hostname,
+      host: html.window.document.baseUri,
       port: int.tryParse(html.window.location.port) ??
           (html.window.location.protocol == 'http:' ? 80 : 443),
-      path: '${html.window.document.baseUri ?? ''}$path',
+      path: path,
     );
     html.window.open(launchUri.toString(), '_self');
   }

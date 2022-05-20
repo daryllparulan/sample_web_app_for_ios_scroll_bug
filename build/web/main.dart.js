@@ -51398,29 +51398,27 @@ $1(a){if(a.length===0)return"*required"
 return null},
 $S:7}
 A.Zr.prototype={
-$0(){var s=0,r=A.a6(t.H),q,p=this,o,n,m,l,k
+$0(){var s=0,r=A.a6(t.H),q,p=this,o,n,m,l
 var $async$$0=A.a7(function(a,b){if(a===1)return A.a3(b,r)
-while(true)switch(s){case 0:k=p.a
-k.ag(new A.Zm(k))
-o=k.d.gR()
+while(true)switch(s){case 0:l=p.a
+l.ag(new A.Zm(l))
+o=l.d.gR()
 o.e=!0
 o.zA()
 s=o.iI()?3:4
 break
 case 3:s=5
 return A.aa(A.NO(A.c0(0,0,5),t.z),$async$$0)
-case 5:window.document.baseURI
-k=window.location.protocol
-k=A.a2_(k,":","")
-o=window.location.hostname
+case 5:l=window.location.protocol
+l=A.a2_(l,":","")
+o=window.document.baseURI
 n=A.a3i(window.location.port,null)
 if(n==null)n=window.location.protocol==="http:"?80:443
-m=window.document.baseURI
-l=A.a8D(o,(m==null?"":m)+"/sent",n,k)
-B.ab.ZA(window,l.gtZ(),"_self")
+m=A.a8D(o,"/sent",n,l)
+B.ab.ZA(window,m.gtZ(),"_self")
 s=1
 break
-case 4:k.ag(new A.Zn(k))
+case 4:l.ag(new A.Zn(l))
 case 1:return A.a4(q,r)}})
 return A.a5($async$$0,r)},
 $S:33}
