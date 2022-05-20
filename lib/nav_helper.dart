@@ -9,12 +9,15 @@ class HtmlNavHelper {
   const HtmlNavHelper();
 
   void navigate(String path) {
+    var base = html.window.document.querySelector('base');
+    String baseHref = base == null ? '/' : base.dataset['href'] ?? '/';
+
     final Uri launchUri = Uri(
       scheme: html.window.location.protocol.replaceAll(':', ''),
-      host: html.window.document.baseUri,
+      host: html.window.location.hostname,
       port: int.tryParse(html.window.location.port) ??
           (html.window.location.protocol == 'http:' ? 80 : 443),
-      path: path,
+      path: '$baseHref$path',
     );
     html.window.open(launchUri.toString(), '_self');
   }
@@ -24,10 +27,10 @@ class HtmlNavHelper {
   }
 
   void goToSentPage() {
-    navigate('/sent');
+    navigate('sent');
   }
 
   void goToMainPage() {
-    navigate('/');
+    navigate('');
   }
 }
