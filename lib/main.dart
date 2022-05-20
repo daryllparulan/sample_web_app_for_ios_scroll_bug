@@ -1,7 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sample_web_app_for_ios_scroll_bug/nav_helper.dart';
+import 'package:sample_web_app_for_ios_scroll_bug/routes.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
+  /// to remove the # in url link
+  setPathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -12,6 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      onGenerateRoute: RouteGenerator.generateRoute,
+      initialRoute: RoutesName.INITIAL_PAGE,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
@@ -56,7 +63,7 @@ class MyApp extends StatelessWidget {
           PointerDeviceKind.stylus,
         },
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -72,6 +79,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               Expanded(
                                 child: InputTextField(
+                                  readOnly: isLoading,
+                                  enabled: !isLoading,
                                   floatingLabelBehavior:
                                       FloatingLabelBehavior.auto,
                                   maxLength: 100,
@@ -146,6 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               hrSmallSizedBox,
                               Expanded(
                                 child: InputTextField(
+                                  readOnly: isLoading,
+                                  enabled: !isLoading,
                                   floatingLabelBehavior:
                                       FloatingLabelBehavior.auto,
                                   maxLength: 100,
@@ -185,6 +198,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtXSmallSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -197,7 +212,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             hintText: '3rd field',
                           ),
                           vtMediumSizedBox,
-                          const InputTextField(
+                          InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -205,6 +222,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -218,6 +237,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -231,6 +252,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -244,6 +267,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -257,6 +282,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -270,6 +297,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -283,6 +312,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -296,6 +327,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           vtMediumSizedBox,
                           InputTextField(
+                            readOnly: isLoading,
+                            enabled: !isLoading,
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
                             maxLength: 100,
                             counterText: '',
@@ -311,11 +344,27 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     vtLargeSizedBox,
-                    ElevatedButton(
-                      onPressed: () {
-                        _formKey.currentState!.validate();
+                    TextButton(
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        if (_formKey.currentState!.validate()) {
+                          await Future.delayed(Duration(seconds: 5));
+
+                          /// we are using html navigation since
+                          /// flutter_webview navigation listener does not
+                          /// catch navigation on single page web app
+                          HtmlNavHelper().goToSentPage();
+                          return;
+                        }
+                        setState(() {
+                          isLoading = false;
+                        });
                       },
-                      child: Text('test'),
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : Text('test'),
                     ),
                   ],
                 ),
@@ -335,6 +384,9 @@ class InputTextField extends StatefulWidget {
   final int? maxLength;
   final String? counterText;
   final FloatingLabelBehavior? floatingLabelBehavior;
+
+  final bool? enabled;
+  final bool readOnly;
   const InputTextField({
     Key? key,
     this.hintText,
@@ -343,6 +395,8 @@ class InputTextField extends StatefulWidget {
     this.maxLength,
     this.counterText,
     this.floatingLabelBehavior,
+    this.enabled,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -353,6 +407,8 @@ class _InputTextFieldState extends State<InputTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.readOnly,
+      enabled: widget.enabled,
       maxLength: widget.maxLength,
       validator: widget.validator,
       decoration: InputDecoration(
@@ -383,3 +439,16 @@ const SizedBox vtLargeSizedBox = SizedBox(height: 35);
 const SizedBox hrSmallSizedBox = SizedBox(width: 15);
 const SizedBox hrMediumSizedBox = SizedBox(width: 25);
 const SizedBox hrLargeSizedBox = SizedBox(width: 50);
+
+class SentPage extends StatelessWidget {
+  const SentPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Sent'),
+      ),
+    );
+  }
+}
