@@ -13,7 +13,8 @@ class HtmlNavHelper {
       host: html.window.location.hostname,
       port: int.tryParse(html.window.location.port) ??
           (html.window.location.protocol == 'http:' ? 80 : 443),
-      path: path,
+      path:
+          '${const String.fromEnvironment('FLUTTER_BASE_HREF', defaultValue: '')}$path',
     );
     html.window.open(launchUri.toString(), '_self');
   }
