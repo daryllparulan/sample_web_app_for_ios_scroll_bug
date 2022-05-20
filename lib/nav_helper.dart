@@ -1,4 +1,5 @@
 // ignore: avoid_web_libraries_in_flutter
+import 'dart:developer';
 import 'dart:html' as html;
 
 /// we are using html navigation since
@@ -8,13 +9,13 @@ class HtmlNavHelper {
   const HtmlNavHelper();
 
   void navigate(String path) {
+    log('${html.window.document.baseUri ?? ''}$path');
     final Uri launchUri = Uri(
       scheme: html.window.location.protocol.replaceAll(':', ''),
       host: html.window.location.hostname,
       port: int.tryParse(html.window.location.port) ??
           (html.window.location.protocol == 'http:' ? 80 : 443),
-      path:
-          '${const String.fromEnvironment('FLUTTER_BASE_HREF', defaultValue: '')}$path',
+      path: '${html.window.document.baseUri ?? ''}$path',
     );
     html.window.open(launchUri.toString(), '_self');
   }
